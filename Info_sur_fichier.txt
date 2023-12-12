@@ -1,0 +1,11 @@
+
+Quelques remarques sur le fichier :
+	- Données disponibles :
+		- Mesure de Chlore en sortie de la Bâche de contact chlore
+		- Débit de javel en entrée de bâche
+		- Débit entrée usine : DN400 et DN1000
+		- Débits en sortie usine : 4.09, 4.13 et 4.11
+	- Pour avoir le bon débit de fonctionnement, il faut prendre les données DN400 + DN1000 (débitmètres en parallèles)
+	- Il n'y a pas de compteur en sortie d'usine :
+		- la somme 4.09+4.13 donne une approximation du débit sortie usine en instantané mais avec une partie non comptée.
+		- la somme 4.11+4.09 donne la totalité du volume mais avec des effets de marnage de réservoir ne permettant pas d'avoir une valeur instantanée fiable.

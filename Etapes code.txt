@@ -1,0 +1,36 @@
+1 - Extraire les données ✔
+
+2 - Nettoyer les données : ✔
+	- excel "historique" : séparer la colonne HORODATE en 2 colonnes DATE et HEURE ✔
+	- excel "extraction" (feuille 1) : faire un DataFrame avec pour chaque jour 3 colonnes pour le COT, le pH et la température de l'eau et moyenner si plusieurs données pour le même paramètre disponibles chaque jour ✔
+	  Faire une fonction "water_characteristics" dans laquelle :
+		- créer 1 DataFrame vide avec 5 colonnes : DATE, HEURE, COT (mg(C)/L), pH, TEMP (°C)
+		- pour chaque ligne de la feuille, faire un conditionnement sur la valeur de "Paramètre" (C Orga (1841), pH (1302) ou Temp. eau (1301)) et sur la date (pour savoir quand changer de ligne) pour attribuer à la bonne colonne la valeur de "Résultat"
+		- si pour une même date plusieurs valeurs du paramètre existent faire une moyenne arithmétique (si la case est déjà occupée dire que la nouvelle valeur de la case est a (valeur déjà présente) + b /2)
+		- supprimer la colonne HEURE parce qu'on en a plus besoin 
+
+3 - Calculer les débits d'entrée (DN400+DN1000) journaliers
+    Faire une fonction "inlet_flow" :
+		- créer 1 DataFrame vide avec 4 colonnes : DATE, DN400, DN100, DEBIT_ENTREE (m3/h)
+		- séparément pour DN400 et DN1000 faire une somme journalière 
+		- sommer pour chaque jour les 2 débits d'entrée 
+		- supprimer les colonnes DN400 et DN1000
+
+4 - Calculer la demande en chlore à partir de l'excel (concentration en chlore actif à 130  et 150 g/L de chlore libre donc en moyenne 140 g/L)
+    Vu les indications de Wolby, je pense que le plus simple est encore de faire une somme journalière pour l'entrée et la sortie puis faire la différence entre ces sommes journalières.
+    Faire une fonction "chlorine_demand" :
+		- créer un DataFrame vide avec 4 colonnes : DATE, ENTREE, SORTIE, DEMANDE_EN_CHLORE (g/m3)
+		- pour la sortie en chlore :
+			- faire des bilans journaliers : pour chaque date, sommer toutes les valeurs de sortie
+		- pour l'entrée en chlore :
+			- faire des bilans journaliers : pour chaque date, sommer toutes les valeurs d'entrée
+			- convertir en g/m3 : pour chaque date, faire l'opération suivante sur la valeur d'entrée (en L/h) ENTREE = (140 x valeur d'entrée (en L/h)) / DEBIT_ENTREE (à la même date)
+		- pour chaque date, faire la différence entre ENTREE et SORTIE dans DEMANDE_EN_CHLORE (g/m3)
+		- supprimer ENTREE et SORTIE
+
+5 - Synchroniser les données :
+	- construire un DataFrame global qui rassemble toutes les données en fonction de la date : faire une compilation des 3 DataFrame précédents
+	- enlever les lignes pour lesquelles la demande en chlore et le débit d'entrée sont les seules données disponibles
+
+6 - Tracer la demande en chlore en focntion de tous les autres paramètres et voir si une corrélation existe 
+		- on verra bien si on y arrive un jour...
