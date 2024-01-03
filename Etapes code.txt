@@ -9,7 +9,7 @@
 		- si pour une même date plusieurs valeurs du paramètre existent faire une moyenne arithmétique (si la case est déjà occupée dire que la nouvelle valeur de la case est a (valeur déjà présente) + b /2)
 		- supprimer la colonne HEURE parce qu'on en a plus besoin 
 
-3 - Calculer les débits d'entrée (DN400+DN1000) journaliers
+3 - Calculer les débits d'entrée (DN400+DN1000) journaliers ✔
     Faire une fonction "inlet_flow" :
 		- créer 1 DataFrame vide avec 4 colonnes : DATE, DN400, DN100, DEBIT_ENTREE (m3/h)
 		- séparément pour DN400 et DN1000 faire une somme journalière 

@@ -20,11 +20,22 @@ print(df)'''
 '''df = dataCleanup(extrBaseQual)
 print(df)'''
 
-# Test de waterChar() | EN COURS
+# Test de waterChar() | VALIDE
 '''waterchar_df = waterChar(df)
 print(waterchar_df)'''
 
-# Test de inletFlow() | EN COURS
-inletflow_df = inletFlow(DN400, DN1000)
-print(inletflow_df)
+# Test de instantInletFlow() et dailtInletFlow()| VALIDE
+'''instantInletflow_df = instantInletFlow(DN400, DN1000)
+print(instantInletflow_df)
 
+dailyInletFlow_df = dailyInletFlow(instantInletflow_df)
+print(dailyInletFlow_df)'''
+
+# Test de dailyChlorineDemand() | VALIDE
+
+'''dailyClDemand_df = dailyChlorineDemand(mesCL2, debJavel, dailyInletFlow_df) # !!! Necessite DailtInletFlow_df !!!
+print(dailyClDemand_df)'''
+
+# Test de journeyTime() | 
+
+dailyAverageJourneyTime(DN400, DN1000)

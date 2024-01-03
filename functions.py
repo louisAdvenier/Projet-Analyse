@@ -17,15 +17,67 @@ def splitDate(data): #VALIDEE
 
     return data
 
-def inletFlow(DN400, DN1000) : 
+# Bilan instantanné sur les débits d'entrée
+def instantInletFlow(DN400, DN1000) : 
+    # Combine les deux dataFrames DN400 et DN1000 en les joignant sur 'Date de prélèvement' et 'Heure de prélèvement'
     dataFrame = pd.merge(splitDate(DN400), splitDate(DN1000), on = ['Date de prélèvement', 'Heure de prélèvement'], how = 'outer', suffixes=('_DN400', '_DN1000'))
+    # Remplace les Nan par des 0 pour pouvoir faire des sommes
     dataFrame.fillna(0, inplace=True)
+    # Somme des colonnes
     dataFrame['DEBIT_ENTREE (m3/h)'] = dataFrame['VALEUR (en m3/h)_DN400'] + dataFrame['VALEUR (en m3/h)_DN1000']
+    # Suppression des colonnes inutiles
     del dataFrame['VALEUR (en m3/h)_DN400']
     del dataFrame['VALEUR (en m3/h)_DN1000']
-    
+
     return dataFrame
     
+def dailyInletFlow(instantInletFlow) :
+    # Somme les debits d'entrée par jour
+    dataFrame = instantInletFlow.groupby(['Date de prélèvement']).sum().reset_index()
+    # Supprime la colonne 'Heure de prélèvement' désormais inutile
+    del dataFrame['Heure de prélèvement']
+    dataFrame.rename(columns={'DEBIT_ENTREE (m3/h)':'DEBIT_ENTREE (m3/j)'}, inplace = True)
+
+    return dataFrame
+
+def dailyChlorineDemand(mesCL2, debJavel, dailyInletFlow) :
+    # Bilan journalier des sorties en CL2
+    sortie_CL2 = splitDate(mesCL2)
+    sortie_CL2 = sortie_CL2.groupby(['Date de prélèvement']).sum().reset_index()
+    del sortie_CL2['Heure de prélèvement']
+    # Bilan journalier des entrées en javel
+    entree_Jav = splitDate(debJavel)
+    entree_Jav = entree_Jav.groupby(['Date de prélèvement']).sum().reset_index()
+    del entree_Jav['Heure de prélèvement']
+    # Conversion debit journalier javel en equivalent entree CL2
+    entree_Jav_col = entree_Jav['VALEUR (en L/h)']
+    entree_Jav_eqCL2 = 140*entree_Jav_col/dailyInletFlow['DEBIT_ENTREE (m3/j)']
+    # Conversion débit journalier sortie CL2 de mg/l en g/l
+    sortie_CL2_col = sortie_CL2['VALEUR (en mg/l)']/1000
+    # Creation DataFrame avec seulement les dates de prélèvement
+    dataFrame = pd.DataFrame(dailyInletFlow['Date de prélèvement'])
+    # Difference des deux colonnes
+    dataFrame['DEMANDE_EN_CHLORE (g/m3)'] = sortie_CL2_col - entree_Jav_eqCL2
+
+    return dataFrame
+
+def journeyTime(DN400, DN1000) :
+
+    dataFrame = pd.merge(splitDate(DN400), splitDate(DN1000), on = ['Date de prélèvement', 'Heure de prélèvement'], how = 'inner', suffixes=('_DN400', '_DN1000'))
+    dataFrame = dataFrame.loc[(dataFrame['VALEUR (en m3/h)_DN400'] != 0) & (dataFrame['VALEUR (en m3/h)_DN1000'] != 0)]
+    dataFrame['Temps de séjour (h)'] = 2960 / (dataFrame['VALEUR (en m3/h)_DN400'] + dataFrame['VALEUR (en m3/h)_DN1000'])
+
+    print(dataFrame)
+
+def dailyAverageJourneyTime(DN400, DN1000) :
+
+    dataFrame = instantInletFlow(DN400, DN1000)
+    dataFrame = dailyInletFlow(dataFrame)
+    dataFrame['Temps de séjour (min)'] = 2960 / dataFrame['DEBIT_ENTREE (m3/j)'] * 24 * 60
+    del dataFrame['DEBIT_ENTREE (m3/j)']
+
+    print(dataFrame)
+
 #######################################################################################################
 # Fonctions qui concernent le fichier : 'Extraction qual. sortie VIL.xlsx'                            #
 #######################################################################################################
@@ -91,4 +143,6 @@ def waterChar(data) :
             dataFrame = pd.concat([dataFrame, newRow], ignore_index=True)
             
     return dataFrame
+
+
         
