@@ -1,5 +1,11 @@
 import pandas as pd
 import re
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy import signal
+
+def main() :
+    return
 
 #######################################################################################################
 # Fonctions qui concernent le fichier : 'historique données bcc v02.xlsx'                             #
@@ -16,6 +22,7 @@ def splitDate(data): #VALIDEE
     data = data[['Date de prélèvement'] + [col for col in data.columns if col != 'Date de prélèvement']]
 
     return data
+
 
 # Bilan instantanné sur les débits d'entrée
 def instantInletFlow(DN400, DN1000) : 
@@ -77,6 +84,7 @@ def dailyAverageJourneyTime(DN400, DN1000) :
     del dataFrame['DEBIT_ENTREE (m3/j)']
 
     print(dataFrame)
+
 
 #######################################################################################################
 # Fonctions qui concernent le fichier : 'Extraction qual. sortie VIL.xlsx'                            #
@@ -144,5 +152,18 @@ def waterChar(data) :
             
     return dataFrame
 
+# Fonction qui résume tout
+def dailyWaterChar(extrBaseQual) :
+    
+    df = dataCleanup(extrBaseQual)
+    df = waterChar(df)
 
+    df['Date de prélèvement'] = df['Date de prélèvement'].astype(str)
+
+    return df
+
+
+
+if __name__ == '__main__' :
+    main()
         

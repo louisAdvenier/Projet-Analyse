@@ -3,8 +3,8 @@ import pandas as pd
 histDon = 'historique données bcc v02.xlsx'
 ExtrQual = 'Extraction qual. sortie VIL.xlsx'
 
-#mesCL2 = pd.read_excel(histDon, sheet_name = 'Mesure CL2 sortie BCC')
-#debJavel = pd.read_excel(histDon, sheet_name = 'Débit de javel entrée BCC')
+mesCL2 = pd.read_excel(histDon, sheet_name = 'Mesure CL2 sortie BCC')
+debJavel = pd.read_excel(histDon, sheet_name = 'Débit de javel entrée BCC')
 DN400 = pd.read_excel(histDon, sheet_name = 'Débit entrée DN400')
 DN1000 = pd.read_excel(histDon, sheet_name = 'Débit entrée DN1000')
 #DB409 = pd.read_excel(histDon, sheet_name = '4.09_Db')

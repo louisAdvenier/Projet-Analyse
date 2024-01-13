@@ -17,8 +17,8 @@ print(extrBaseQual)'''
 print(df)'''
 
 # Test de dataCleanup() | VALIDE
-'''df = dataCleanup(extrBaseQual)
-print(df)'''
+df = dataCleanup(extrBaseQual)
+print(df)
 
 # Test de waterChar() | VALIDE
 '''waterchar_df = waterChar(df)
